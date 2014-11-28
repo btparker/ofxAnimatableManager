@@ -11,7 +11,13 @@ void ofxAnimatableManager::update(float dt){
     }
 }
 
-void ofxAnimatableManager::addAnimatable(string key, ofxAnimatable* animatable){
+void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
+    // If no key is provided, create unique key (perhaps a bit jankity, but I didn't want something "predictable")
+    // And I want keys later as an option
+    
+    if(key == ""){
+        key = ofToString(animatables.size())+"-"+ofToString(ofGetFrameNum());
+    }
     animatables[key] = animatable;
     animatables[key]->setRepeatType(ofxAnimatable::repeat_);
     animatables[key]->setCurve(ofxAnimatable::curveStyle_);

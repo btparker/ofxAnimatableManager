@@ -14,7 +14,7 @@ class ofxAnimatableManager: public ofxAnimatable{
         void update(float dt);
         void setRepeatType(AnimRepeat repeat);
         void setCurve( AnimCurve curveStyle );
-        void addAnimatable(string key, ofxAnimatable* animatable);
+        void addAnimatable(ofxAnimatable* animatable, string key = "");
 
     protected:
         map<string, ofxAnimatable*> animatables;

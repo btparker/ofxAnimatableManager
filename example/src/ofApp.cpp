@@ -45,14 +45,14 @@ void ofApp::setup(){
     ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
-    ballAnimationManager.addAnimatable("pos", &ballB.pos);
+    ballAnimationManager.addAnimatable(&ballB.pos);
     ballB.pos.setPosition( ofPoint(300.0f,300.0f) );
     ballB.pos.animateTo( ofPoint(300.0f, 100.0f) );
     
-    ballAnimationManager.addAnimatable("s", &ballB.s);
+    ballAnimationManager.addAnimatable(&ballB.s);
     ballB.s.animateFromTo(5.0, 10.0);
     
-    ballAnimationManager.addAnimatable("color", &ballB.color);
+    ballAnimationManager.addAnimatable(&ballB.color);
     ballB.color.setColor(ofColor::grey);
     ballB.color.animateTo(ofColor::cyan);
 }
