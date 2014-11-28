@@ -14,7 +14,7 @@ void ofApp::setup(){
     
     
     //set initial position
-    ballA.pos.setPosition( ofPoint(150.0f,300.0f) );
+    ballA.pos.setPosition( ofPoint(ofGetWidth()*0.33,ofGetHeight()*0.33) );
     
     //set repeating style
     ballA.pos.setRepeatType(LOOP_BACK_AND_FORTH);
@@ -23,7 +23,7 @@ void ofApp::setup(){
     ballA.pos.setCurve(EASE_IN_EASE_OUT);
     
     //start the animation, go from current pos to the specified point
-    ballA.pos.animateTo( ofPoint(150.0f, 100.0f) );
+    ballA.pos.animateTo( ofPoint(ofGetWidth()*0.33, ofGetHeight()*0.66) );
     
     ballA.color.setColor(ofColor::grey);
     
@@ -46,8 +46,8 @@ void ofApp::setup(){
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
     ballAnimationManager.addAnimatable(&ballB.pos);
-    ballB.pos.setPosition( ofPoint(300.0f,300.0f) );
-    ballB.pos.animateTo( ofPoint(300.0f, 100.0f) );
+    ballB.pos.setPosition( ofPoint(ofGetWidth()*0.66,ofGetHeight()*0.33) );
+    ballB.pos.animateTo( ofPoint(ofGetWidth()*0.66, ofGetHeight()*0.66) );
     
     ballAnimationManager.addAnimatable(&ballB.s);
     ballB.s.animateFromTo(5.0, 10.0);
