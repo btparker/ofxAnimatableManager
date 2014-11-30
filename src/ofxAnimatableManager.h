@@ -15,9 +15,13 @@ class ofxAnimatableManager: public ofxAnimatable{
         void setRepeatType(AnimRepeat repeat);
         void setCurve( AnimCurve curveStyle );
         void addAnimatable(ofxAnimatable* animatable, string key = "");
+        void setDurationUnits(string key, int units);
+        void updateDurations();
+        void setDuration(float duration);
 
     protected:
         map<string, ofxAnimatable*> animatables;
+        map<string, int> animatableDurationUnits;
     
     private:
     

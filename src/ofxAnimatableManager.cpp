@@ -40,5 +40,31 @@ void ofxAnimatableManager::setCurve( AnimCurve curveStyle ){
 void ofxAnimatableManager::startAfterWait(){
 }
 
+void ofxAnimatableManager::setDurationUnits(string key, int units){
+    animatableDurationUnits[key] = units;
+    updateDurations();
+    
+}
+
+void ofxAnimatableManager::setDuration(float duration){
+    ofxAnimatable::setDuration(duration);
+    updateDurations();
+}
+
+void ofxAnimatableManager::updateDurations(){
+    float duration = ofxAnimatable::getDuration();
+    int mostUnits = 0;
+    for(auto iterator = animatableDurationUnits.begin(); iterator != animatableDurationUnits.end(); iterator++){
+        mostUnits = animatableDurationUnits[iterator->first] > mostUnits ? animatableDurationUnits[iterator->first] : mostUnits;
+    }
+    
+    for(auto iterator = animatables.begin(); iterator != animatables.end(); iterator++){
+        if(animatableDurationUnits.count(iterator->first) == 0){
+            animatableDurationUnits[iterator->first] = mostUnits;
+        }
+        animatables[iterator->first]->setDuration((duration/mostUnits)*animatableDurationUnits[iterator->first]);
+    }
+}
+
 ofxAnimatableManager::~ofxAnimatableManager(){
 }
