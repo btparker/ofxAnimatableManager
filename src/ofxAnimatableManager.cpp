@@ -31,6 +31,10 @@ void ofxAnimatableManager::update(float dt){
 }
 
 void ofxAnimatableManager::animateState(string key){
+    string transitionState = "";
+    if(states.count(activeState+"->"+key) == 1){
+        transitionState = activeState+"->"+key;
+    }
     if(states.count(key) == 0){
         ofLogError("No state "+key+" found!");
         return;
@@ -40,11 +44,26 @@ void ofxAnimatableManager::animateState(string key){
         return;
     }
     activeState = key;
-    ofxAnimatableFloat::setDuration(states[activeState].duration);
+    float stateDuration;
+    if(transitionState.length() > 0 && states[transitionState].duration >= 0){
+        stateDuration = states[transitionState].duration;
+    }
+    else{
+        stateDuration = states[activeState].duration;
+    }
+    ofxAnimatableFloat::setDuration(stateDuration);
     for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
         string animatableKey = iterator->first;
         AnimatableValues animatableValues = states[activeState].animatableValues[animatableKey];
-        float animatableDuration = states[activeState].duration*(animatableValues.durationUnits/(float)states[activeState].durationUnits);
+        int stateDurationUnits = states[activeState].durationUnits;
+        if(transitionState.length() > 0 && states[transitionState].durationUnits >= 0){
+            stateDurationUnits = states[transitionState].durationUnits;
+        }
+        int durationUnits = animatableValues.durationUnits;
+        if(transitionState.length() > 0 && states[transitionState].animatableValues[animatableKey].durationUnits >= 0){
+            durationUnits = states[transitionState].durationUnits;
+        }
+        float animatableDuration = stateDuration*(durationUnits/(float)stateDurationUnits);
         
         ofPoint targetPos;
         ofPoint origPos;
@@ -98,6 +117,14 @@ void ofxAnimatableManager::animateTo(string key, ofColor value, int durationUnit
     states[activeState].animatableValues[key].type = AnimatableTypes::COLOR;
     states[activeState].animatableValues[key].endColor = value;
     setDurationUnits(key,durationUnits);
+}
+
+void ofxAnimatableManager::startStateTransitionDefinition(string state1, string state2){
+    startStateDefinition(state1+"->"+state2);
+}
+
+void ofxAnimatableManager::endStateTransitionDefinition(string state1, string state2){
+    endStateDefinition(state1+"->"+state2);
 }
 
 void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
