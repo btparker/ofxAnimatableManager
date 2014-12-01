@@ -3,6 +3,7 @@
 ofxAnimatableManager::ofxAnimatableManager(){
     activeState = States::DEFAULT;
     states[States::DEFAULT] = State();
+    setCurve(EASE_IN_EASE_OUT);
     setup();
 }
 
@@ -57,6 +58,7 @@ void ofxAnimatableManager::animateState(string key){
         stateDurationUnits = states[transitionState].durationUnits;
     }
     for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
+        
         string animatableKey = iterator->first;
         AnimatableValues animatableValues = states[activeState].animatableValues[animatableKey];
         
@@ -171,11 +173,15 @@ void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
         key = ofToString(animatables.size())+"-"+ofToString(ofGetFrameNum());
     }
     animatables[key] = animatable;
-    states[activeState].animatableValues[key].curveStyle = ofxAnimatable::curveStyle_;
+    states[activeState].animatableValues[key].curveStyle = ofxAnimatableFloat::curveStyle_;
 }
 
 void ofxAnimatableManager::setCurve( AnimCurve curveStyle ){
     states[activeState].curveStyle = curveStyle;
+    ofxAnimatableFloat::setCurve(curveStyle);
+    for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
+        states[activeState].animatableValues[iterator->first].curveStyle = curveStyle;
+    }
 }
 
 void ofxAnimatableManager::startAfterWait(){
