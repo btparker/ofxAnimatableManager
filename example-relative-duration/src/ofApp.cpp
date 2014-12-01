@@ -11,7 +11,6 @@ void ofApp::setup(){
     //
     //  Like the basic example
     //
-//    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
     ballAnimationManager.addAnimatable(&ballB.pos,"position");
@@ -41,7 +40,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // ballB
     ofSetColor(ballB.color.getCurrentColor());
     ofFill();
     ofCircle(ballB.pos.getCurrentPosition().x, ballB.pos.getCurrentPosition().y, ballB.s);

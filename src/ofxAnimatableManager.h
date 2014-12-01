@@ -16,7 +16,7 @@ namespace AnimatableTypes {
 }
 
 struct AnimatableValues{
-    int durationUnits;
+    int durationUnits = -1;
     AnimatableTypes::ENUM type;
     AnimCurve curveStyle;
     
@@ -30,9 +30,9 @@ struct AnimatableValues{
 };
 
 struct State{
-    float duration;
-    float durationUnitLength;
-    int durationUnits;
+    float duration = -1.0;
+    float durationUnitLength = -1;
+    int durationUnits = -1;
     
     AnimCurve curveStyle;
     
@@ -40,12 +40,11 @@ struct State{
 };
 
 
-class ofxAnimatableManager: public ofxAnimatable{
+class ofxAnimatableManager: public ofxAnimatableFloat{
     public:
         ofxAnimatableManager();
         ~ofxAnimatableManager();
         void update(float dt);
-        void setRepeatType(AnimRepeat repeat);
         void setCurve( AnimCurve curveStyle );
         void addAnimatable(ofxAnimatable* animatable, string key = "");
         void setDurationUnits(string key, int units);
@@ -53,6 +52,8 @@ class ofxAnimatableManager: public ofxAnimatable{
         void setDuration(float duration);
         void startStateDefinition(string state);
         void endStateDefinition(string state);
+        void startStateTransitionDefinition(string state1, string state2);
+        void endStateTransitionDefinition(string state1, string state2);
         void animateTo(string key, ofPoint value, int durationUnits);
         void animateTo(string key, float value, int durationUnits);
         void animateTo(string key, ofColor value, int durationUnits);

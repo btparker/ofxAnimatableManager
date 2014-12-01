@@ -43,6 +43,30 @@ void ofApp::setup(){
     ballAnimationManager.setDuration(1.2);
     
     ballAnimationManager.endStateDefinition(States::STATE2);
+    
+    ballAnimationManager.startStateDefinition(States::STATE3);
+    ballAnimationManager.setCurve(QUADRATIC_EASE_IN);
+    
+    ballAnimationManager.animateTo("position",ofPoint(ofGetWidth()*0.5, ofGetHeight()*0.5),5);
+    ballAnimationManager.animateTo("scale", 5.0, 1);
+    ballAnimationManager.animateTo("color", ofColor::orange, 1);
+    
+    ballAnimationManager.setDuration(5.0);
+    
+    ballAnimationManager.endStateDefinition(States::STATE3);
+    
+    ballAnimationManager.startStateTransitionDefinition(States::STATE1,States::STATE3);
+    ballAnimationManager.setCurve(QUADRATIC_EASE_IN);
+    
+    ballAnimationManager.setDurationUnits("position",1);
+    ballAnimationManager.setDurationUnits("scale", 1);
+    ballAnimationManager.setDurationUnits("color", 1);
+    
+    ballAnimationManager.setDuration(0.5);
+    
+    ballAnimationManager.endStateTransitionDefinition(States::STATE1, States::STATE3);
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -57,7 +81,7 @@ void ofApp::draw(){
     ofSetColor(ballB.color.getCurrentColor());
     ofFill();
     ofCircle(ballB.pos.getCurrentPosition().x, ballB.pos.getCurrentPosition().y, ballB.s);
-    ofDrawBitmapString("Press 1 for State1, press 2 for State2", 15, ofGetHeight()-15);
+    ofDrawBitmapString("Press 1 for State1, press 2 for State2, press 3 for State3", 15, ofGetHeight()-15);
     
 }
 
@@ -70,45 +94,48 @@ void ofApp::keyPressed(int key){
         case '2':
             ballAnimationManager.animateState(States::STATE2);
             break;
+        case '3':
+            ballAnimationManager.animateState(States::STATE3);
+            break;
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+void ofApp::dragEvent(ofDragInfo dragInfo){
+    
 }
