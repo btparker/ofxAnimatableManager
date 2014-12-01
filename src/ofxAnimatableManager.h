@@ -45,7 +45,6 @@ class ofxAnimatableManager: public ofxAnimatable{
         ofxAnimatableManager();
         ~ofxAnimatableManager();
         void update(float dt);
-        void setRepeatType(AnimRepeat repeat);
         void setCurve( AnimCurve curveStyle );
         void addAnimatable(ofxAnimatable* animatable, string key = "");
         void setDurationUnits(string key, int units);

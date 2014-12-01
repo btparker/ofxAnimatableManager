@@ -111,12 +111,6 @@ void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
     states[activeState].animatableValues[key].curveStyle = ofxAnimatable::curveStyle_;
 }
 
-void ofxAnimatableManager::setRepeatType( AnimRepeat repeat ){
-//    ofxAnimatable::setRepeatType(repeat);
-//    for(auto iterator = animatables.begin(); iterator != animatables.end(); iterator++){
-//        animatables[iterator->first]->setRepeatType(repeat);
-//    }
-}
 
 void ofxAnimatableManager::setCurve( AnimCurve curveStyle ){
     states[activeState].curveStyle = curveStyle;
@@ -142,6 +136,9 @@ void ofxAnimatableManager::updateDurations(){
     int totalUnits = 0;
     for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
         totalUnits = states[activeState].animatableValues[iterator->first].durationUnits > totalUnits ? states[activeState].animatableValues[iterator->first].durationUnits : totalUnits;
+    }
+    for(auto iterator = animatables.begin(); iterator != animatables.end(); iterator++){
+        animatables[iterator->first]->setDuration(duration*(states[activeState].animatableValues[iterator->first].durationUnits/(float)totalUnits));
     }
     states[activeState].durationUnits = totalUnits;
 }

@@ -11,7 +11,6 @@ void ofApp::setup(){
     //
     //  Like the basic example
     //
-//    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
     ballAnimationManager.addAnimatable(&ballB.pos,"position");
