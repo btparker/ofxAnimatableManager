@@ -9,73 +9,38 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     
     //
-    //  How to use ofxAnimatable to do multiple animation tweens of the same style
+    //  Like the basic example
     //
-    
-    
-    //set initial position
-    ballA.pos.setPosition( ofPoint(ofGetWidth()*0.33,ofGetHeight()*0.33) );
-    
-    //set repeating style
-    ballA.pos.setRepeatType(LOOP_BACK_AND_FORTH);
-    
-    //set animation curve
-    ballA.pos.setCurve(EASE_IN_EASE_OUT);
-    
-    //start the animation, go from current pos to the specified point
-    ballA.pos.animateTo( ofPoint(ofGetWidth()*0.33, ofGetHeight()*0.66) );
-    
-    ballA.color.setColor(ofColor::grey);
-    
-    ballA.color.setRepeatType(LOOP_BACK_AND_FORTH);
-    
-    ballA.color.setCurve(EASE_IN_EASE_OUT);
-    
-    ballA.color.animateTo(ofColor::cyan);
-    
-    ballA.s.animateFromTo(5.0, 10.0);
-    
-    ballA.s.setRepeatType(LOOP_BACK_AND_FORTH);
-    
-    ballA.s.setCurve(EASE_IN_EASE_OUT);
-    
-    //
-    //  How to use ofxAnimatableManager to do the equivalent animations
-    //
-    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
+//    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
-    ballAnimationManager.addAnimatable(&ballB.pos);
-    ballB.pos.setPosition( ofPoint(ofGetWidth()*0.66,ofGetHeight()*0.33) );
-    ballB.pos.animateTo( ofPoint(ofGetWidth()*0.66, ofGetHeight()*0.66) );
+    ballAnimationManager.addAnimatable(&ballB.pos,"position");
+    ballB.pos.setPosition( ofPoint(ofGetWidth()*0.5,ofGetHeight()*0.33) );
+    ballB.pos.animateTo( ofPoint(ofGetWidth()*0.5, ofGetHeight()*0.66) );
     
-    ballAnimationManager.addAnimatable(&ballB.s);
+    ballAnimationManager.addAnimatable(&ballB.s,"scale");
     ballB.s.animateFromTo(5.0, 10.0);
     
-    ballAnimationManager.addAnimatable(&ballB.color);
+    ballAnimationManager.addAnimatable(&ballB.color,"color");
     ballB.color.setColor(ofColor::grey);
     ballB.color.animateTo(ofColor::cyan);
+    
+    // Setting duration
+    ballAnimationManager.setDurationUnits("position", 3);
+    ballAnimationManager.setDurationUnits("scale", 1);
+    ballAnimationManager.setDurationUnits("color", 2);
+    
+    ballAnimationManager.setDuration(3.0);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // ballA update with App timebase (60 fps)
-    ballA.pos.update( 1.0f/ofGetFrameRate());
-    ballA.color.update( 1.0f/ofGetFrameRate());
-    ballA.s.update( 1.0f/ofGetFrameRate());
-    
     // ballB
     ballAnimationManager.update( 1.0f/ofGetFrameRate() );
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // ballA
-    
-    ofSetColor(ballA.color.getCurrentColor());
-    ofFill();
-    ofCircle(ballA.pos.getCurrentPosition().x, ballA.pos.getCurrentPosition().y, ballA.s);
-    
     // ballB
     ofSetColor(ballB.color.getCurrentColor());
     ofFill();
