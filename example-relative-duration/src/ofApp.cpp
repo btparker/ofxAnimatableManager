@@ -40,7 +40,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // ballB
     ofSetColor(ballB.color.getCurrentColor());
     ofFill();
     ofCircle(ballB.pos.getCurrentPosition().x, ballB.pos.getCurrentPosition().y, ballB.s);
