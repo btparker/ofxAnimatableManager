@@ -16,9 +16,6 @@ void ofApp::setup(){
     //set initial position
     ballA.pos.setPosition( ofPoint(ofGetWidth()*0.33,ofGetHeight()*0.33) );
     
-    //set repeating style
-    ballA.pos.setRepeatType(LOOP_BACK_AND_FORTH);
-    
     //set animation curve
     ballA.pos.setCurve(EASE_IN_EASE_OUT);
     
@@ -27,22 +24,17 @@ void ofApp::setup(){
     
     ballA.color.setColor(ofColor::grey);
     
-    ballA.color.setRepeatType(LOOP_BACK_AND_FORTH);
-    
     ballA.color.setCurve(EASE_IN_EASE_OUT);
     
     ballA.color.animateTo(ofColor::cyan);
     
     ballA.s.animateFromTo(5.0, 10.0);
     
-    ballA.s.setRepeatType(LOOP_BACK_AND_FORTH);
-    
     ballA.s.setCurve(EASE_IN_EASE_OUT);
     
     //
     //  How to use ofxAnimatableManager to do the equivalent animations
     //
-    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
     ballAnimationManager.addAnimatable(&ballB.pos);
