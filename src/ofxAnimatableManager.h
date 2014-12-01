@@ -40,12 +40,11 @@ struct State{
 };
 
 
-class ofxAnimatableManager: public ofxAnimatable{
+class ofxAnimatableManager: public ofxAnimatableFloat{
     public:
         ofxAnimatableManager();
         ~ofxAnimatableManager();
         void update(float dt);
-        void setRepeatType(AnimRepeat repeat);
         void setCurve( AnimCurve curveStyle );
         void addAnimatable(ofxAnimatable* animatable, string key = "");
         void setDurationUnits(string key, int units);

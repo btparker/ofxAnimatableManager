@@ -11,19 +11,15 @@ void ofApp::setup(){
     //
     //  Like the basic example
     //
-//    ballAnimationManager.setRepeatType(LOOP_BACK_AND_FORTH);
     
     ballAnimationManager.addAnimatable(&ballB.pos,"position");
     ballB.pos.setPosition( ofPoint(ofGetWidth()*0.5,ofGetHeight()*0.33) );
-//    ballB.pos.animateTo( ofPoint(ofGetWidth()*0.5, ofGetHeight()*0.66) );
     
     ballAnimationManager.addAnimatable(&ballB.s,"scale");
     ballB.s.reset(5.0);
-//    ballB.s.animateTo(10.0);
     
     ballAnimationManager.addAnimatable(&ballB.color,"color");
     ballB.color.setColor(ofColor::grey);
-//    ballB.color.animateTo(ofColor::cyan);
     
     // Setting
     ballAnimationManager.startStateDefinition(States::STATE1);
