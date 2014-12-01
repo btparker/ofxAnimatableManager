@@ -35,7 +35,7 @@ void ofxAnimatableManager::animateState(string key){
         ofLogError("No state "+key+" found!");
         return;
     }
-    // Don't transition in same state
+    // TODO: possibly remove - Don't transition in same state
     if(key == activeState){
         return;
     }
