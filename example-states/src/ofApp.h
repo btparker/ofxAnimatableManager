@@ -7,7 +7,13 @@ struct Ball {
     ofxAnimatableOfPoint pos;
     ofxAnimatableFloat s;
     ofxAnimatableOfColor color;
+    
 };
+
+namespace States {
+    const string STATE1 = "state1";
+    const string STATE2 = "state2";
+}
 
 class ofApp : public ofBaseApp{
 
