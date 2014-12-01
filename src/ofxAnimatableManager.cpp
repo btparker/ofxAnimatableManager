@@ -35,6 +35,10 @@ void ofxAnimatableManager::animateState(string key){
         ofLogError("No state "+key+" found!");
         return;
     }
+    // Don't transition in same state
+    if(key == activeState){
+        return;
+    }
     activeState = key;
     ofxAnimatable::setDuration(states[activeState].duration);
     for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
