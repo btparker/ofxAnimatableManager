@@ -1,27 +1,27 @@
 #include "ofxAnimatableManager.h"
 
 ofxAnimatableManager::ofxAnimatableManager(){
-    activeState = States::DEFAULT;
-    states[States::DEFAULT] = State();
+    activeAnimation = Animations::DEFAULT;
+    animations[Animations::DEFAULT] = State();
     setCurve(EASE_IN_EASE_OUT);
     setup();
 }
 
-void ofxAnimatableManager::startStateDefinition(string state){
-    if(activeState != States::DEFAULT){
-        ofLogError("Currently defining state "+activeState+", close with endStateDefinition("+activeState+") first.");
+void ofxAnimatableManager::startAnimationDefinition(string animation){
+    if(activeAnimation != Animations::DEFAULT){
+        ofLogError("Currently defining animation "+activeAnimation+", close with endAnimationDefinition("+activeAnimation+") first.");
         return;
     }
-    activeState = state;
-    states[state] = State();
+    activeAnimation = animation;
+    animations[animation] = State();
 }
 
-void ofxAnimatableManager::endStateDefinition(string state){
-    if(activeState == States::DEFAULT){
-        ofLogError("Not currently definining state, open with endStateDefinition("+state+") first.");
+void ofxAnimatableManager::endAnimationDefinition(string animation){
+    if(activeAnimation == Animations::DEFAULT){
+        ofLogError("Not currently defining animation, open with endAnimationDefinition("+animation+") first.");
         return;
     }
-    activeState = States::DEFAULT;
+    activeAnimation = Animations::DEFAULT;
 }
 
 void ofxAnimatableManager::update(float dt){
@@ -31,47 +31,47 @@ void ofxAnimatableManager::update(float dt){
     }
 }
 
-void ofxAnimatableManager::animateState(string key){
-    string transitionState = "";
-    if(states.count(activeState+"->"+key) == 1){
-        transitionState = activeState+"->"+key;
+void ofxAnimatableManager::animate(string key){
+    string transitionAnimation = "";
+    if(animations.count(activeAnimation+"->"+key) == 1){
+        transitionAnimation = activeAnimation+"->"+key;
     }
-    if(states.count(key) == 0){
-        ofLogError("No state "+key+" found!");
+    if(animations.count(key) == 0){
+        ofLogError("No animation "+key+" found!");
         return;
     }
-    // TODO: possibly remove - Don't transition in same state
-    if(key == activeState){
+    // TODO: possibly remove - Don't transition in same animation
+    if(key == activeAnimation){
         return;
     }
-    activeState = key;
-    float stateDuration;
-    if(transitionState.length() > 0 && states[transitionState].duration >= 0){
-        stateDuration = states[transitionState].duration;
+    activeAnimation = key;
+    float animationDuration;
+    if(transitionAnimation.length() > 0 && animations[transitionAnimation].duration >= 0){
+        animationDuration = animations[transitionAnimation].duration;
     }
     else{
-        stateDuration = states[activeState].duration;
+        animationDuration = animations[activeAnimation].duration;
     }
-    ofxAnimatableFloat::setDuration(stateDuration);
-    int stateDurationUnits = states[activeState].durationUnits;
-    if(transitionState.length() > 0 && states[transitionState].durationUnits >= 0){
-        stateDurationUnits = states[transitionState].durationUnits;
+    ofxAnimatableFloat::setDuration(animationDuration);
+    int animationDurationUnits = animations[activeAnimation].durationUnits;
+    if(transitionAnimation.length() > 0 && animations[transitionAnimation].durationUnits >= 0){
+        animationDurationUnits = animations[transitionAnimation].durationUnits;
     }
-    for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
+    for(auto iterator = animations[activeAnimation].animatableValues.begin(); iterator != animations[activeAnimation].animatableValues.end(); iterator++){
         
         string animatableKey = iterator->first;
-        AnimatableValues animatableValues = states[activeState].animatableValues[animatableKey];
+        AnimatableValues animatableValues = animations[activeAnimation].animatableValues[animatableKey];
         
         int durationUnits = animatableValues.durationUnits;
-        if(transitionState.length() > 0 && states[transitionState].animatableValues[animatableKey].durationUnits >= 0){
-            durationUnits = states[transitionState].animatableValues[animatableKey].durationUnits;
+        if(transitionAnimation.length() > 0 && animations[transitionAnimation].animatableValues[animatableKey].durationUnits >= 0){
+            durationUnits = animations[transitionAnimation].animatableValues[animatableKey].durationUnits;
         }
         int delayUnits;
-        if(transitionState.length() > 0 && states[transitionState].animatableValues[animatableKey].delayUnits >= 0){
-            delayUnits = states[transitionState].animatableValues[animatableKey].delayUnits;
+        if(transitionAnimation.length() > 0 && animations[transitionAnimation].animatableValues[animatableKey].delayUnits >= 0){
+            delayUnits = animations[transitionAnimation].animatableValues[animatableKey].delayUnits;
             
         }
-        else if(states[activeState].animatableValues[animatableKey].delayUnits >= 0){
+        else if(animations[activeAnimation].animatableValues[animatableKey].delayUnits >= 0){
             delayUnits = animatableValues.delayUnits;
             
         }
@@ -79,12 +79,12 @@ void ofxAnimatableManager::animateState(string key){
             delayUnits = 0;
         }
         
-        if(states[transitionState].animatableValues[animatableKey].alignAnimation == AnimationAlignments::END || states[activeState].animatableValues[animatableKey].alignAnimation == AnimationAlignments::END){
-            delayUnits = stateDurationUnits - durationUnits - delayUnits;
+        if(animations[transitionAnimation].animatableValues[animatableKey].alignAnimation == AnimationAlignments::END || animations[activeAnimation].animatableValues[animatableKey].alignAnimation == AnimationAlignments::END){
+            delayUnits = animationDurationUnits - durationUnits - delayUnits;
         }
         
-        float animatableDuration = stateDuration*(durationUnits/(float)stateDurationUnits);
-        float animatableDelay = stateDuration*(delayUnits/(float)stateDurationUnits);
+        float animatableDuration = animationDuration*(durationUnits/(float)animationDurationUnits);
+        float animatableDelay = animationDuration*(delayUnits/(float)animationDurationUnits);
         ofPoint targetPos;
         ofPoint origPos;
         ofColor targetColor;
@@ -93,7 +93,7 @@ void ofxAnimatableManager::animateState(string key){
         float origFloat;
         float percent = animatables[animatableKey]->getPercentDone();
         float curveAtPercent =  animatables[animatableKey]->calcCurveAt(percent);
-        animatables[animatableKey]->setCurve(states[activeState].curveStyle);
+        animatables[animatableKey]->setCurve(animations[activeAnimation].curveStyle);
         animatables[animatableKey]->setDuration(animatableDuration);
         switch(animatableValues.type){
             case AnimatableTypes::POINT:
@@ -137,32 +137,32 @@ void ofxAnimatableManager::animateState(string key){
 }
 
 void ofxAnimatableManager::animateTo(string key, ofPoint value, int durationUnits, int delayUnits, AnimationAlignments::ENUM alignAnimation){
-    states[activeState].animatableValues[key].type = AnimatableTypes::POINT;
-    states[activeState].animatableValues[key].endPoint = value;
+    animations[activeAnimation].animatableValues[key].type = AnimatableTypes::POINT;
+    animations[activeAnimation].animatableValues[key].endPoint = value;
     setDurationUnits(key,durationUnits);
     setDelayUnits(key,delayUnits,alignAnimation);
 }
 
 void ofxAnimatableManager::animateTo(string key, float value, int durationUnits, int delayUnits, AnimationAlignments::ENUM alignAnimation){
-    states[activeState].animatableValues[key].type = AnimatableTypes::FLOAT;
-    states[activeState].animatableValues[key].endFloat = value;
+    animations[activeAnimation].animatableValues[key].type = AnimatableTypes::FLOAT;
+    animations[activeAnimation].animatableValues[key].endFloat = value;
     setDurationUnits(key,durationUnits);
     setDelayUnits(key,delayUnits,alignAnimation);
 }
 
 void ofxAnimatableManager::animateTo(string key, ofColor value, int durationUnits, int delayUnits, AnimationAlignments::ENUM alignAnimation){
-    states[activeState].animatableValues[key].type = AnimatableTypes::COLOR;
-    states[activeState].animatableValues[key].endColor = value;
+    animations[activeAnimation].animatableValues[key].type = AnimatableTypes::COLOR;
+    animations[activeAnimation].animatableValues[key].endColor = value;
     setDurationUnits(key,durationUnits);
     setDelayUnits(key,delayUnits,alignAnimation);
 }
 
-void ofxAnimatableManager::startStateTransitionDefinition(string state1, string state2){
-    startStateDefinition(state1+"->"+state2);
+void ofxAnimatableManager::startAnimationTransitionDefinition(string state1, string state2){
+    startAnimationDefinition(state1+"->"+state2);
 }
 
-void ofxAnimatableManager::endStateTransitionDefinition(string state1, string state2){
-    endStateDefinition(state1+"->"+state2);
+void ofxAnimatableManager::endAnimationTransitionDefinition(string state1, string state2){
+    endAnimationDefinition(state1+"->"+state2);
 }
 
 void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
@@ -173,25 +173,22 @@ void ofxAnimatableManager::addAnimatable(ofxAnimatable* animatable, string key){
         key = ofToString(animatables.size())+"-"+ofToString(ofGetFrameNum());
     }
     animatables[key] = animatable;
-    states[activeState].animatableValues[key].curveStyle = ofxAnimatableFloat::curveStyle_;
+    animations[activeAnimation].animatableValues[key].curveStyle = ofxAnimatableFloat::curveStyle_;
 }
 
 void ofxAnimatableManager::setCurve( AnimCurve curveStyle ){
-    states[activeState].curveStyle = curveStyle;
+    animations[activeAnimation].curveStyle = curveStyle;
     ofxAnimatableFloat::setCurve(curveStyle);
-    for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
-        states[activeState].animatableValues[iterator->first].curveStyle = curveStyle;
+    for(auto iterator = animations[activeAnimation].animatableValues.begin(); iterator != animations[activeAnimation].animatableValues.end(); iterator++){
+        animations[activeAnimation].animatableValues[iterator->first].curveStyle = curveStyle;
     }
-}
-
-void ofxAnimatableManager::startAfterWait(){
 }
 
 void ofxAnimatableManager::setDurationUnits(string key, int units){
     if(animatables.count(key) == 0){
         return 0;
     }
-    states[activeState].animatableValues[key].durationUnits = units;
+    animations[activeAnimation].animatableValues[key].durationUnits = units;
     updateDurations();
     
 }
@@ -200,29 +197,29 @@ void ofxAnimatableManager::setDelayUnits(string key, int units, AnimationAlignme
     if(animatables.count(key) == 0){
         return 0;
     }
-    states[activeState].animatableValues[key].delayUnits = units;
-    states[activeState].animatableValues[key].alignAnimation = alignAnimation;
+    animations[activeAnimation].animatableValues[key].delayUnits = units;
+    animations[activeAnimation].animatableValues[key].alignAnimation = alignAnimation;
     updateDurations();
 }
 
 void ofxAnimatableManager::setDuration(float duration){
     ofxAnimatableFloat::setDuration(duration);
-    states[activeState].duration = duration;
+    animations[activeAnimation].duration = duration;
     updateDurations();
 }
 
 void ofxAnimatableManager::updateDurations(){
-    float duration = states[activeState].duration;
+    float duration = animations[activeAnimation].duration;
     int totalUnits = 0;
-    for(auto iterator = states[activeState].animatableValues.begin(); iterator != states[activeState].animatableValues.end(); iterator++){
-        int durationUnits = states[activeState].animatableValues[iterator->first].durationUnits >= 0 ? states[activeState].animatableValues[iterator->first].durationUnits : 0;
-        int delayUnits = states[activeState].animatableValues[iterator->first].delayUnits >= 0 ? states[activeState].animatableValues[iterator->first].delayUnits : 0;
+    for(auto iterator = animations[activeAnimation].animatableValues.begin(); iterator != animations[activeAnimation].animatableValues.end(); iterator++){
+        int durationUnits = animations[activeAnimation].animatableValues[iterator->first].durationUnits >= 0 ? animations[activeAnimation].animatableValues[iterator->first].durationUnits : 0;
+        int delayUnits = animations[activeAnimation].animatableValues[iterator->first].delayUnits >= 0 ? animations[activeAnimation].animatableValues[iterator->first].delayUnits : 0;
         totalUnits = (delayUnits+durationUnits) > totalUnits ? (delayUnits+durationUnits) : totalUnits;
     }
     for(auto iterator = animatables.begin(); iterator != animatables.end(); iterator++){
-        animatables[iterator->first]->setDuration(duration*(states[activeState].animatableValues[iterator->first].durationUnits/(float)totalUnits));
+        animatables[iterator->first]->setDuration(duration*(animations[activeAnimation].animatableValues[iterator->first].durationUnits/(float)totalUnits));
     }
-    states[activeState].durationUnits = totalUnits;
+    animations[activeAnimation].durationUnits = totalUnits;
 }
 
 ofxAnimatableManager::~ofxAnimatableManager(){

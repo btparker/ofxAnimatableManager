@@ -7,7 +7,7 @@
 #include "ofxAnimatableOfPoint.h"
 #include "ofxAnimatableOfColor.h"
 
-namespace States {
+namespace Animations {
     const string DEFAULT = "DEFAULT";
 }
 
@@ -58,23 +58,21 @@ public:
     void setDelayUnits(string key, int units, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
     void updateDurations();
     void setDuration(float duration);
-    void startStateDefinition(string state);
-    void endStateDefinition(string state);
-    void startStateTransitionDefinition(string state1, string state2);
-    void endStateTransitionDefinition(string state1, string state2);
-    void animateTo(string key, ofPoint value, int durationUnits, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
-    void animateTo(string key, float value, int durationUnits, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
-    void animateTo(string key, ofColor value, int durationUnits, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
+    void startAnimationDefinition(string animation);
+    void endAnimationDefinition(string animation);
+    void startAnimationTransitionDefinition(string state1, string state2);
+    void endAnimationTransitionDefinition(string state1, string state2);
+    void animateTo(string key, ofPoint value, int durationUnits = 1, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
+    void animateTo(string key, float value, int durationUnits = 1, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
+    void animateTo(string key, ofColor value, int durationUnits = 1, int delayUnits = -1, AnimationAlignments::ENUM alignAnimation = AnimationAlignments::START);
     
-    void animateState(string key);
+    void animate(string key);
     
 protected:
-    string activeState;
+    string activeAnimation;
     map<string, ofxAnimatable*> animatables;
-    map<string, State> states;
+    map<string, State> animations;
     map<string, int> animatableDurationUnits;
     
 private:
-    
-    void startAfterWait();
 };

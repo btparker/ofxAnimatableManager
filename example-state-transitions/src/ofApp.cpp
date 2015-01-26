@@ -26,10 +26,10 @@ void ofApp::setup(){
     ballAnimationManager.setCurve(EASE_IN_EASE_OUT);
     
     ballAnimationManager.animateTo("position",ofPoint(ofGetWidth()*0.5, ofGetHeight()*0.66),3);
-    ballAnimationManager.animateTo("scale", 10.0, 1);
-    ballAnimationManager.animateTo("color", ofColor::cyan, 2);
+    ballAnimationManager.animateTo("scale", 10.0, 3);
+    ballAnimationManager.animateTo("color", ofColor::cyan, 3);
     
-    ballAnimationManager.setDuration(3.0);
+    ballAnimationManager.setDuration(1.0);
     
     ballAnimationManager.endStateDefinition(States::STATE1);
     
@@ -81,7 +81,7 @@ void ofApp::draw(){
     ofSetColor(ballB.color.getCurrentColor());
     ofFill();
     ofCircle(ballB.pos.getCurrentPosition().x, ballB.pos.getCurrentPosition().y, ballB.s);
-    ofDrawBitmapString("Press 1 for State1, press 2 for State2, press 3 for State3", 15, ofGetHeight()-15);
+    ofDrawBitmapString("Press 1 for State1, press 2 for State2, press 3 for State3 (State1->State3 has a transition state)", 15, ofGetHeight()-15);
     
 }
 
