@@ -7,6 +7,7 @@ struct Ball {
     ofxAnimatableOfPoint pos;
     ofxAnimatableFloat s;
     ofxAnimatableOfColor color;
+    
 };
 
 class ofApp : public ofBaseApp{
