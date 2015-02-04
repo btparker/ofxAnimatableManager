@@ -13,10 +13,18 @@ public:
     float getDelay();
     void play();
     ofxAnimationKeyframe* getCurrentKeyframe();
+    ofxAnimationKeyframe* getNextKeyframe();
+    
     void setAnimatable(string key, ofxAnimatableFloat* floatAnimatable);
     void setAnimatable(string key, ofxAnimatableOfColor* colorAnimatable);
     
     void applyKeyframe(ofxAnimationKeyframe* keyframe);
+    void animateToKeyframe(ofxAnimationKeyframe* keyframe, float duration);
+    
+    void animateToNextKeyframe();
+    
+    bool started;
+
 protected:
     string ID;
     float duration, delay;

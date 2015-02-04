@@ -4,7 +4,8 @@
 #include "ofxAnimatableManager.h"
 
 struct Ball {
-    ofxAnimatableOfPoint pos;
+    ofxAnimatableFloat x;
+    ofxAnimatableFloat y;
     ofxAnimatableFloat s;
     ofxAnimatableOfColor color;
     

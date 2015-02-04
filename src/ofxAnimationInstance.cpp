@@ -11,19 +11,31 @@ ofxAnimationInstance::ofxAnimationInstance(ofxAnimation* animation){
 
 void ofxAnimationInstance::update(float dt){
     ofxAnimatableFloat::update(dt);
-    
-    
-    float percentDone = ofxAnimatableFloat::getPercentDone();
-    while(
-        // While there is a next keyframe
-        keyframeIndex < animation->getKeyframeSequence().size()-1 &&
-        // and while the current keyframe percentage is less than the percent done
-        animation->getKeyframeSequence()[keyframeIndex+1]->getPercentage() <= percentDone
-    ){
-        keyframeIndex++;
-        applyKeyframe(getCurrentKeyframe());
+    for(auto colorIt = colorAnimatables.begin(); colorIt != colorAnimatables.end(); ++colorIt){
+        colorIt->second->update(dt);
     }
-//    cout << "[" << percentDone << ","<< getDuration() << "," << getCurrentKeyframe()->getPercentageKey() << "]" << endl;
+    for(auto floatIt = floatAnimatables.begin(); floatIt != floatAnimatables.end(); ++floatIt){
+        floatIt->second->update(dt);
+    }
+    if(started){
+        while(
+              // While there is a next keyframe
+              getNextKeyframe() != NULL &&
+              // and while the current keyframe percentage is less than the percent done
+              animation->getKeyframeSequence()[keyframeIndex+1]->getPercentage() <= ofxAnimatableFloat::getPercentDone()
+              ){
+            keyframeIndex++;
+            animateToNextKeyframe();
+        }
+    }
+    else if(isAnimating() && !started){
+        if(animation->hasStartingKeyframe()){
+            ofxAnimationKeyframe* startingKeyframe = animation->getStartingKeyframe();
+            applyKeyframe(startingKeyframe);
+        }
+        animateToNextKeyframe();
+        started = true;
+    }
 }
 
 void ofxAnimationInstance::setID(string ID){
@@ -34,13 +46,30 @@ string ofxAnimationInstance::getID(){
     return this->ID;
 }
 
+void ofxAnimationInstance::setDelay(float delay){
+    this->delay = delay;
+}
+
+float ofxAnimationInstance::getDelay(){
+    return this->delay;
+}
+
 void ofxAnimationInstance::play(){
-    getCurrentKeyframe()->print();
-    ofxAnimatableFloat::startAnimation();
-    if(animation->hasStartingKeyframe()){
-        ofxAnimationKeyframe* startingKeyframe = animation->getStartingKeyframe();
-        applyKeyframe(startingKeyframe);
+    if(getDelay() > 0){
+        ofxAnimatableFloat::startAnimationAfterDelay(getDelay());
+        started = false;
     }
+    else{
+        started = true;
+    }
+    for(auto colorIt = colorAnimatables.begin(); colorIt != colorAnimatables.end(); ++colorIt){
+        colorIt->second->setCurve(this->curveStyle_);
+    }
+    for(auto floatIt = floatAnimatables.begin(); floatIt != floatAnimatables.end(); ++floatIt){
+        floatIt->second->setCurve(this->curveStyle_);
+    }
+    
+    
 }
 
 void ofxAnimationInstance::applyKeyframe(ofxAnimationKeyframe *keyframe){
@@ -56,6 +85,23 @@ void ofxAnimationInstance::applyKeyframe(ofxAnimationKeyframe *keyframe){
     }
 }
 
+void ofxAnimationInstance::animateToKeyframe(ofxAnimationKeyframe *keyframe, float duration){
+    for(auto colorIt = colorAnimatables.begin(); colorIt != colorAnimatables.end(); ++colorIt){
+        if(keyframe->hasColorValue(colorIt->first)){
+            colorIt->second->pause();
+            colorIt->second->setDuration(duration);
+            colorIt->second->animateTo(keyframe->getColor(colorIt->first));
+        }
+    }
+    for(auto floatIt = floatAnimatables.begin(); floatIt != floatAnimatables.end(); ++floatIt){
+        if(keyframe->hasFloatValue(floatIt->first)){
+            floatIt->second->pause();
+            floatIt->second->setDuration(duration);
+            floatIt->second->animateTo(keyframe->getFloat(floatIt->first));
+        }
+    }
+}
+
 void ofxAnimationInstance::setAnimatable(string key, ofxAnimatableFloat* floatAnimatable){
     floatAnimatables[key] = floatAnimatable;
 }
@@ -66,4 +112,24 @@ void ofxAnimationInstance::setAnimatable(string key, ofxAnimatableOfColor* color
 
 ofxAnimationKeyframe* ofxAnimationInstance::getCurrentKeyframe(){
     return this->animation->getKeyframeSequence()[keyframeIndex];
+}
+
+ofxAnimationKeyframe* ofxAnimationInstance::getNextKeyframe(){
+    if(keyframeIndex < animation->getKeyframeSequence().size()-1){
+        return this->animation->getKeyframeSequence()[keyframeIndex+1];
+    }
+    else{
+        return NULL;
+    }
+}
+
+void ofxAnimationInstance::animateToNextKeyframe(){
+    ofxAnimationKeyframe* curr;
+    ofxAnimationKeyframe* next;
+    curr = getCurrentKeyframe();
+    next = getNextKeyframe();
+    if(next != NULL){
+        float percentDiff =(next->getPercentage() - curr->getPercentage());
+        animateToKeyframe(next, percentDiff*getDuration());
+    }
 }
