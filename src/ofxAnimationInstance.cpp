@@ -22,7 +22,7 @@ void ofxAnimationInstance::update(float dt){
               // While there is a next keyframe
               getNextKeyframe() != NULL &&
               // and while the current keyframe percentage is less than the percent done
-              animation->getKeyframeSequence()[keyframeIndex+1]->getPercentage() <= ofxAnimatableFloat::getPercentDone()
+              animation->getKeyframeSequence()[keyframeIndex]->getPercentage() < ofxAnimatableFloat::getPercentDone()
               )
         {
             animateToNextKeyframe();
@@ -30,10 +30,10 @@ void ofxAnimationInstance::update(float dt){
         }
     }
     else if(isAnimating() && !started){
-        if(animation->hasStartingKeyframe()){
-            ofxAnimationKeyframe* startingKeyframe = animation->getStartingKeyframe();
-            applyKeyframe(startingKeyframe);
-        }
+//        if(animation->hasStartingKeyframe()){
+//            ofxAnimationKeyframe* startingKeyframe = animation->getStartingKeyframe();
+//            applyKeyframe(startingKeyframe);
+//        }
         animateToNextKeyframe();
         started = true;
     }

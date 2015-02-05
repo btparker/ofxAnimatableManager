@@ -1,8 +1,8 @@
 #include "ofxAnimation.h"
 
 ofxAnimation::ofxAnimation(){
-    addKeyframe("0%");
-    addKeyframe("100%");
+//    addKeyframe("0%");
+//    addKeyframe("100%");
 }
 
 void ofxAnimation::setName(string name){

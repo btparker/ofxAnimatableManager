@@ -14,6 +14,7 @@ public:
     void triggerAnimationInstance(string animationInstanceID);
     bool hasAnimation(string animationName);
     ofxAnimation* getAnimation(string animationName);
+    static AnimCurve getCurveFromName(string name);
 protected:
     map<string, ofxAnimation*> animations;
     map<string, ofxAnimationInstance*> animationInstances;
