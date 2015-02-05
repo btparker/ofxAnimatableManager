@@ -23,10 +23,12 @@ string ofxAnimationKeyframe::getPercentageKey(){
 
 void ofxAnimationKeyframe::setValue(string key, ofColor value){
     colorValues[key] = value;
+    keys.insert(key);
 }
 
 void ofxAnimationKeyframe::setValue(string key, float value){
     floatValues[key] = value;
+    keys.insert(key);
 }
 
 bool ofxAnimationKeyframe::hasValue(string key){
@@ -59,6 +61,10 @@ string ofxAnimationKeyframe::getValueType(string key){
     else{
         return "";
     }
+}
+
+set<string> ofxAnimationKeyframe::getKeys(){
+    return keys;
 }
 
 void ofxAnimationKeyframe::print(){

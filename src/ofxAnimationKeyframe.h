@@ -19,9 +19,13 @@ public:
     bool hasFloatValue(string key);
     bool hasColorValue(string key);
     
+    set<string> getKeys();
+    
 protected:
     string percentageKey;
     float percentage;
     map<string, ofColor> colorValues;
     map<string, float> floatValues;
+    
+    set<string> keys;
 };

@@ -14,7 +14,6 @@ string ofxAnimation::getName(){
 }
 
 ofxAnimationKeyframe* ofxAnimation::addKeyframe(string keyframePercent){
-    
     float percent = ofToFloat(keyframePercent)/100.0f;
     if(keyframes.count(keyframePercent) == 0){
         keyframes[keyframePercent] = ofxAnimationKeyframe();

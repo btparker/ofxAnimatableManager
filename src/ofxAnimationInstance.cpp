@@ -23,9 +23,10 @@ void ofxAnimationInstance::update(float dt){
               getNextKeyframe() != NULL &&
               // and while the current keyframe percentage is less than the percent done
               animation->getKeyframeSequence()[keyframeIndex+1]->getPercentage() <= ofxAnimatableFloat::getPercentDone()
-              ){
-            keyframeIndex++;
+              )
+        {
             animateToNextKeyframe();
+            keyframeIndex++;
         }
     }
     else if(isAnimating() && !started){
@@ -60,6 +61,7 @@ void ofxAnimationInstance::play(){
         started = false;
     }
     else{
+        ofxAnimatableFloat::startAnimation();
         started = true;
     }
     for(auto colorIt = colorAnimatables.begin(); colorIt != colorAnimatables.end(); ++colorIt){
@@ -128,6 +130,7 @@ void ofxAnimationInstance::animateToNextKeyframe(){
     ofxAnimationKeyframe* next;
     curr = getCurrentKeyframe();
     next = getNextKeyframe();
+    
     if(next != NULL){
         float percentDiff =(next->getPercentage() - curr->getPercentage());
         animateToKeyframe(next, percentDiff*getDuration());

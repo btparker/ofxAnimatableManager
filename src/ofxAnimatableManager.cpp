@@ -20,6 +20,20 @@ ofxAnimation* ofxAnimatableManager::addAnimation(string animationName){
     return animations[animationName];
 }
 
+bool ofxAnimatableManager::hasAnimation(string animationName){
+    return animations.count(animationName) > 0;
+}
+
+
+ofxAnimation* ofxAnimatableManager::getAnimation(string animationName){
+    if(hasAnimation(animationName)){
+        return animations[animationName];
+    }
+    else{
+        return NULL;
+    }
+}
+
 ofxAnimationInstance* ofxAnimatableManager::generateAnimationInstance(string animationName, string animationInstanceID){
     if(animations.count(animationName) == 0){
         ofLogError("ofxAnimatableManager::generateAnimationInstance", "No animation of name "+animationName+" found, ofxAnimationInstance requires ofxAnimation, returning NULL");
