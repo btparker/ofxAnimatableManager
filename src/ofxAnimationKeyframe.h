@@ -14,11 +14,9 @@ public:
     float getFloat(string key);
     string getValueType(string key);
     void print();
-    
     bool hasValue(string key);
     bool hasFloatValue(string key);
     bool hasColorValue(string key);
-    
     set<string> getKeys();
     
 protected:

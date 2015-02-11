@@ -11,6 +11,8 @@ public:
     string getID();
     void setDelay(float delay);
     float getDelay();
+    void setDuration(float duration);
+    float getDuration();
     void play();
     ofxAnimationKeyframe* getCurrentKeyframe();
     ofxAnimationKeyframe* getNextKeyframe();
@@ -22,6 +24,7 @@ public:
     void animateToKeyframe(ofxAnimationKeyframe* keyframe, float duration);
     
     void animateToNextKeyframe();
+    
     
     bool started;
 

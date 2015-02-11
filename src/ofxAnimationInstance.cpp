@@ -55,6 +55,14 @@ float ofxAnimationInstance::getDelay(){
     return this->delay;
 }
 
+void ofxAnimationInstance::setDuration(float duration){
+    this->duration = duration;
+}
+
+float ofxAnimationInstance::getDuration(){
+    return this->duration;
+}
+
 void ofxAnimationInstance::play(){
     if(getDelay() > 0){
         ofxAnimatableFloat::startAnimationAfterDelay(getDelay());
