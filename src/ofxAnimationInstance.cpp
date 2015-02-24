@@ -7,6 +7,13 @@ ofxAnimationInstance::ofxAnimationInstance(ofxAnimation* animation){
     keyframeIndex = 0;
     this->delay = 0.0f;
     this->animation = animation;
+    ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
+}
+
+void ofxAnimationInstance::finished(AnimationEvent & args){
+    args.who->setPercentDone(0.0);
+    args.who->pause();
+    ((ofxAnimationInstance*)args.who)->keyframeIndex = 0;
 }
 
 void ofxAnimationInstance::update(float dt){
@@ -30,10 +37,6 @@ void ofxAnimationInstance::update(float dt){
         }
     }
     else if(isAnimating() && !started){
-//        if(animation->hasStartingKeyframe()){
-//            ofxAnimationKeyframe* startingKeyframe = animation->getStartingKeyframe();
-//            applyKeyframe(startingKeyframe);
-//        }
         animateToNextKeyframe();
         started = true;
     }
@@ -78,8 +81,6 @@ void ofxAnimationInstance::play(){
     for(auto floatIt = floatAnimatables.begin(); floatIt != floatAnimatables.end(); ++floatIt){
         floatIt->second->setCurve(this->curveStyle_);
     }
-    
-    
 }
 
 void ofxAnimationInstance::applyKeyframe(ofxAnimationKeyframe *keyframe){
@@ -143,4 +144,12 @@ void ofxAnimationInstance::animateToNextKeyframe(){
         float percentDiff =(next->getPercentage() - curr->getPercentage());
         animateToKeyframe(next, percentDiff*getDuration());
     }
+}
+
+void ofxAnimationInstance::setStateID(string stateID){
+    this->stateID = stateID;
+}
+
+string ofxAnimationInstance::getStateID(){
+    return stateID;
 }

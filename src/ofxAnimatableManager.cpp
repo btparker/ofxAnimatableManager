@@ -47,6 +47,7 @@ ofxAnimationInstance* ofxAnimatableManager::generateAnimationInstance(string ani
 }
 
 void ofxAnimatableManager::triggerAnimationInstance(string animationInstanceID){
+    animationInstances[animationInstanceID]->reset();
     animationInstances[animationInstanceID]->play();
 }
 
