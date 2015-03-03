@@ -18,7 +18,6 @@ public:
     bool hasFloatValue(string key);
     bool hasColorValue(string key);
     set<string> getKeys();
-    
 protected:
     string percentageKey;
     float percentage;

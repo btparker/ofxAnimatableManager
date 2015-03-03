@@ -18,12 +18,12 @@ public:
     string getName();
     ofxAnimationKeyframe* addKeyframe(string keyframePercent);
     vector<ofxAnimationKeyframe*> getKeyframeSequence();
-    bool hasStartingKeyframe();
-    ofxAnimationKeyframe* getStartingKeyframe();
     
     static bool keyframeCompare(ofxAnimationKeyframe* a, ofxAnimationKeyframe* b){
         return a->getPercentage() <= b->getPercentage();
     }
+    
+    set<string> getKeys();
     
 private:
     string name;

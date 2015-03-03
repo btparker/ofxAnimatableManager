@@ -1,8 +1,7 @@
 #include "ofxAnimation.h"
 
 ofxAnimation::ofxAnimation(){
-//    addKeyframe("0%");
-//    addKeyframe("100%");
+    addKeyframe("0%");
 }
 
 void ofxAnimation::setName(string name){
@@ -14,33 +13,44 @@ string ofxAnimation::getName(){
 }
 
 ofxAnimationKeyframe* ofxAnimation::addKeyframe(string keyframePercent){
-    float percent = ofToFloat(keyframePercent)/100.0f;
-    if(keyframes.count(keyframePercent) == 0){
-        keyframes[keyframePercent] = ofxAnimationKeyframe();
-        keyframeSequence.push_back(&keyframes[keyframePercent]);
+    // Cleaner naming conventions
+    if(keyframePercent == "from"){
+        keyframePercent = "0%";
     }
+    else if(keyframePercent == "to"){
+        keyframePercent = "100%";
+    }
+    
+    float percent = ofToFloat(keyframePercent)/100.0f;
+    
+    if(keyframes.count(keyframePercent) > 0){
+        int index = ofFind(keyframeSequence, &keyframes[keyframePercent]);
+        keyframeSequence.erase(keyframeSequence.begin() + index);
+    }
+    keyframes[keyframePercent] = ofxAnimationKeyframe();
+    keyframeSequence.push_back(&keyframes[keyframePercent]);
+    
     keyframes[keyframePercent].setPercentage(percent);
+    
     keyframes[keyframePercent].setPercentageKey(keyframePercent);
     
     ofSort(keyframeSequence,ofxAnimation::keyframeCompare);
+    
     return &keyframes[keyframePercent];
+}
+
+set<string> ofxAnimation::getKeys(){
+    set<string> keys;
+    for(ofxAnimationKeyframe* keyframe : getKeyframeSequence()){
+        for(string key : keyframe->getKeys()){
+            keys.insert(key);
+        }
+    }
+    return keys;
 }
 
 vector<ofxAnimationKeyframe*> ofxAnimation::getKeyframeSequence(){
     return this->keyframeSequence;
-}
-
-bool ofxAnimation::hasStartingKeyframe(){
-    return getKeyframeSequence()[0]->getPercentageKey() == "0%";
-}
-
-ofxAnimationKeyframe* ofxAnimation::getStartingKeyframe(){
-    if(hasStartingKeyframe()){
-        return getKeyframeSequence()[0];
-    }
-    else{
-        return NULL;
-    }
 }
 
 ofxAnimation::~ofxAnimation(){

@@ -9,13 +9,12 @@ public:
     void update(float dt);
     void setID(string ID);
     string getID();
+    void setAnimation(ofxAnimation* animation);
     void setDelay(float delay);
     float getDelay();
     void setDuration(float duration);
     float getDuration();
     void play();
-    void setStateID(string stateID);
-    string getStateID();
     ofxAnimationKeyframe* getCurrentKeyframe();
     ofxAnimationKeyframe* getNextKeyframe();
     
@@ -24,11 +23,12 @@ public:
     void finished(AnimationEvent& args);
     void applyKeyframe(ofxAnimationKeyframe* keyframe);
     void animateToKeyframe(ofxAnimationKeyframe* keyframe, float duration);
-    
+    void trigger();
     void animateToNextKeyframe();
-    
+    set<string> getKeys();
     bool started;
-
+    
+    void clone(ofxAnimationInstance* c);
 protected:
     string ID;
     string stateID;
