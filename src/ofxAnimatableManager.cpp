@@ -9,6 +9,9 @@ void ofxAnimatableManager::update(float dt){
     for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
         animationInstance->second->update(dt);
     }
+    for(auto animationInstance = clonedAnimationInstances.begin(); animationInstance != clonedAnimationInstances.end(); ++animationInstance){
+        animationInstance->second->update(dt);
+    }
 }
 
 ofxAnimation* ofxAnimatableManager::addAnimation(string animationName){
@@ -26,7 +29,7 @@ bool ofxAnimatableManager::hasAnimation(string animationName){
 
 
 bool ofxAnimatableManager::hasAnimationInstance(string animationInstanceID){
-    return animationInstances.count(animationInstanceID) > 0;
+    return animationInstances.count(animationInstanceID) > 0 || clonedAnimationInstances.count(animationInstanceID) > 0;
 }
 
 
@@ -69,15 +72,21 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
         ofxAnimationInstance* c = new ofxAnimationInstance();
         animationInstances[animationInstanceID]->clone(c);
         string ID = animationInstanceID+":"+ofToString(c);
-        animationInstances[ID] = c;
-        animationInstances[ID]->setID(ID);
-        return animationInstances[ID];
+        clonedAnimationInstances[ID] = c;
+        clonedAnimationInstances[ID]->setID(ID);
+        return clonedAnimationInstances[ID];
     }
 }
 
 void ofxAnimatableManager::triggerAnimationInstance(string animationInstanceID){
-    animationInstances[animationInstanceID]->reset();
-    animationInstances[animationInstanceID]->play();
+    if(animationInstances[animationInstanceID]){
+        animationInstances[animationInstanceID]->reset();
+        animationInstances[animationInstanceID]->play();
+    }
+    else if(clonedAnimationInstances[animationInstanceID]){
+        clonedAnimationInstances[animationInstanceID]->reset();
+        clonedAnimationInstances[animationInstanceID]->play();
+    }
 }
 
 ofxAnimatableManager::~ofxAnimatableManager(){
@@ -220,7 +229,6 @@ AnimCurve ofxAnimatableManager::getCurveFromName(string name){
 void ofxAnimatableManager::load(string filename){
     ofxJSONElement animationData;
     if(animationData.open(filename)){
-        vector<string> keys = animationData.getMemberNames();
         if(animationData[ANIMATIONS] != ofxJSONElement::null){
             loadAnimations(animationData[ANIMATIONS]);
         }
@@ -233,13 +241,17 @@ void ofxAnimatableManager::load(string filename){
 void ofxAnimatableManager::loadAnimations(ofxJSONElement animationsData){
     vector<string> animationNames = animationsData.getMemberNames();
     for(string animationName : animationNames){
+        animationName = populateExpressions(animationName);
         ofxAnimation* animation = addAnimation(animationName);
         vector<string> keyframeIndices = animationsData[animationName].getMemberNames();
         for(string keyframeIndex : keyframeIndices){
+            keyframeIndex = populateExpressions(keyframeIndex);
             ofxAnimationKeyframe* keyframe = animation->addKeyframe(keyframeIndex);
             vector<string> animatableKeys = animationsData[animationName][keyframeIndex].getMemberNames();
             for(string animatableKey : animatableKeys){
+                animatableKey = populateExpressions(animatableKey);
                 string value = animationsData[animationName][keyframeIndex][animatableKey].asString();
+                value = populateExpressions(value);
                 if(isColor(value)){
                     keyframe->setValue(animatableKey, parseColor(value));
                 }
@@ -316,4 +328,41 @@ ofColor ofxAnimatableManager::parseColor(string colorValue){
         color = ofColor::black;
     }
     return color;
+}
+
+string ofxAnimatableManager::populateExpressions(string input){
+    string value = input;
+    while(ofStringTimesInString(value, "{{") > 0){
+        string leftDeliminator = "{{";
+        string rightDeliminator = "}}";
+        
+        int leftDeliminatorPos = input.find(leftDeliminator);
+        int rightDeliminatorPos = input.find(rightDeliminator);
+        
+        int dataKeyPos = leftDeliminatorPos+leftDeliminator.length();
+        int dataKeyLength = rightDeliminatorPos-dataKeyPos;
+        
+        string dataKey = input.substr(dataKeyPos, dataKeyLength);
+        
+        if(data.count(dataKey) > 0){
+            ofStringReplace(value, leftDeliminator+dataKey+rightDeliminator, data[dataKey]);
+        }
+        else{
+            ofLogWarning("ofxLayout::populateExpressions","Could not find data value for key '{{"+dataKey+"}}', replaced with ''.");
+            ofStringReplace(value, leftDeliminator+dataKey+rightDeliminator, "");
+        }
+    }
+    return value;
+}
+
+void ofxAnimatableManager::setData(map<string, string> data){
+    this->data = data;
+}
+
+map<string, ofxAnimation*>* ofxAnimatableManager::getAnimations(){
+    return &animations;
+}
+
+map<string, ofxAnimationInstance*>* ofxAnimatableManager::getAnimationInstances(){
+    return &animationInstances;
 }

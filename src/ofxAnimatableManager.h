@@ -30,11 +30,17 @@ public:
     void load(string filename);
     void loadAnimations(ofxJSONElement animationsData);
     void loadInstances(ofxJSONElement instancesData);
-    
+    void setData(map<string, string> data);
+    map<string, string> data;
     static bool isColor(string colorStr);
     static ofColor parseColor(string colorValue);
+    map<string, ofxAnimation*>* getAnimations();
+    map<string, ofxAnimationInstance*>* getAnimationInstances();
 protected:
     map<string, ofxAnimation*> animations;
     map<string, ofxAnimationInstance*> animationInstances;
+    map<string, ofxAnimationInstance*> clonedAnimationInstances;
+    
+    string populateExpressions(string input);
 private:
 };
