@@ -274,13 +274,19 @@ void ofxAnimatableManager::loadInstances(ofxJSONElement instancesData){
         string animationName = animationInstanceData[ANIMATION].asString();
         ofxAnimationInstance* animationInstance = generateAnimationInstance(animationName, instanceName);
         if(animationInstanceData[DURATION] != ofxJSONElement::null){
-            animationInstance->setDuration(ofToFloat(animationInstanceData[DURATION].asString()));
+            string duration = animationInstanceData[DURATION].asString();
+            duration = populateExpressions(duration);
+            animationInstance->setDuration(ofToFloat(duration));
         }
         if(animationInstanceData[DELAY] != ofxJSONElement::null){
-            animationInstance->setDelay(ofToFloat(animationInstanceData[DELAY].asString()));
+            string delay = animationInstanceData[DELAY].asString();
+            delay = populateExpressions(delay);
+            animationInstance->setDelay(ofToFloat(delay));
         }
         if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
-            animationInstance->setCurve(getCurveFromName(animationInstanceData[TIMING_FUNCTION].asString()));
+            string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
+            timingFunc = populateExpressions(timingFunc);
+            animationInstance->setCurve(getCurveFromName(timingFunc));
         }
     }
 }
