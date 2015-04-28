@@ -25,7 +25,6 @@ public:
     bool hasAnimationInstance(string animationInstanceID);
     ofxAnimation* getAnimation(string animationName);
     ofxAnimationInstance* getAnimationInstance(string animationInstanceID);
-    static AnimCurve getCurveFromName(string name);
     
     void load(string filename);
     void loadAnimations(ofxJSONElement animationsData);
