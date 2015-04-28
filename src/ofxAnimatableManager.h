@@ -20,7 +20,6 @@ public:
     ofxAnimation* addAnimation(string animationName);
     ofxAnimationInstance* generateAnimationInstance(string animationName, string animationInstanceID);
     ofxAnimationInstance* cloneAnimationInstance(string animationInstanceID);
-    void triggerAnimationInstance(string animationInstanceID);
     bool hasAnimation(string animationName);
     bool hasAnimationInstance(string animationInstanceID);
     ofxAnimation* getAnimation(string animationName);

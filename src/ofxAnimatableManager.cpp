@@ -78,19 +78,11 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
     }
 }
 
-void ofxAnimatableManager::triggerAnimationInstance(string animationInstanceID){
-    if(animationInstances[animationInstanceID]){
-        animationInstances[animationInstanceID]->reset();
-        animationInstances[animationInstanceID]->play();
-    }
-    else if(clonedAnimationInstances[animationInstanceID]){
-        clonedAnimationInstances[animationInstanceID]->reset();
-        clonedAnimationInstances[animationInstanceID]->play();
-    }
-}
-
 ofxAnimatableManager::~ofxAnimatableManager(){
     for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
+        delete animationInstance->second;
+    }
+    for(auto animationInstance = clonedAnimationInstances.begin(); animationInstance != clonedAnimationInstances.end(); ++animationInstance){
         delete animationInstance->second;
     }
 }
