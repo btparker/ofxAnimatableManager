@@ -79,6 +79,9 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
 }
 
 ofxAnimatableManager::~ofxAnimatableManager(){
+    for(auto animation = animations.begin(); animation != animations.end(); ++animation){
+        delete animation->second;
+    }
     for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
         delete animationInstance->second;
     }
@@ -135,14 +138,10 @@ void ofxAnimatableManager::loadInstances(ofxJSONElement instancesData){
         string animationName = animationInstanceData[ANIMATION].asString();
         ofxAnimationInstance* animationInstance = generateAnimationInstance(animationName, instanceName);
         if(animationInstanceData[DURATION] != ofxJSONElement::null){
-            string duration = animationInstanceData[DURATION].asString();
-            duration = populateExpressions(duration);
-            animationInstance->setDuration(ofToFloat(duration));
+            animationInstance->setDuration(ofToFloat(animationInstanceData[DURATION].asString()));
         }
         if(animationInstanceData[DELAY] != ofxJSONElement::null){
-            string delay = animationInstanceData[DELAY].asString();
-            delay = populateExpressions(delay);
-            animationInstance->setDelay(ofToFloat(delay));
+            animationInstance->setDelay(ofToFloat(animationInstanceData[DELAY].asString()));
         }
         if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
             string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
