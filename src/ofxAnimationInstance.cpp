@@ -9,16 +9,16 @@ ofxAnimationInstance::ofxAnimationInstance(){
     ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
 }
 
-ofxAnimationInstance::ofxAnimationInstance(ofxAnimation* animation){
-    keyframeIndex = 0;
-    this->delay = 0.0f;
-    this->duration = 1.0f;
-    this->setCurve(EASE_IN_EASE_OUT);
-    this->setRepeatTimes(1);
-    this->animation = animation;
-    ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
-}
-
+//
+//ofxAnimationInstance::ofxAnimationInstance(ofxAnimation* animation){
+//    keyframeIndex = 0;
+//    this->delay = 0.0f;
+//    this->duration = 1.0f;
+//    this->setCurve(EASE_IN_EASE_OUT);
+//    this->setRepeatTimes(1);
+//    this->animation = animation;
+//    ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
+//}
 
 void ofxAnimationInstance::setAnimation(ofxAnimation* animation){
     this->animation = animation;

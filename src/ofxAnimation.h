@@ -1,14 +1,13 @@
 #pragma once
-
 #include "ofMain.h"
-
 #include "ofxAnimatable.h"
 #include "ofxAnimatableFloat.h"
 #include "ofxAnimatableOfPoint.h"
 #include "ofxAnimatableOfColor.h"
+#include "ofxAnimationInstance.h"
 #include "ofxAnimationKeyframe.h"
 
-
+class ofxAnimationInstance;
 class ofxAnimation{
 public:
     ofxAnimation();
@@ -24,6 +23,8 @@ public:
     }
     
     set<string> getKeys();
+    
+    ofxAnimationInstance* generateAnimationInstance(string ID);
     
 private:
     string name;

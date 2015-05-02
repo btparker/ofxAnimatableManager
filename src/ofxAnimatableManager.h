@@ -1,4 +1,6 @@
+#pragma once
 #include "ofxAnimationInstance.h"
+#include "ofxAnimation.h"
 #include "ofxJSON.h"
 
 const string INSTANCES = "instances";
@@ -18,7 +20,7 @@ public:
     ~ofxAnimatableManager();
     void update(float dt);
     ofxAnimation* addAnimation(string animationName);
-    ofxAnimationInstance* generateAnimationInstance(string animationName, string animationInstanceID);
+//    ofxAnimationInstance* generateAnimationInstance(string animationName, string animationInstanceID);
     ofxAnimationInstance* cloneAnimationInstance(string animationInstanceID);
     bool hasAnimation(string animationName);
     bool hasAnimationInstance(string animationInstanceID);

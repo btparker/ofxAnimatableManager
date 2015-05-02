@@ -51,18 +51,6 @@ ofxAnimationInstance* ofxAnimatableManager::getAnimationInstance(string animatio
     }
 }
 
-ofxAnimationInstance* ofxAnimatableManager::generateAnimationInstance(string animationName, string animationInstanceID){
-    if(animations.count(animationName) == 0){
-        ofLogError("ofxAnimatableManager::generateAnimationInstance", "No animation of name "+animationName+" found, ofxAnimationInstance requires ofxAnimation, returning NULL");
-        return NULL;
-    }
-    else{
-        animationInstances[animationInstanceID] = new ofxAnimationInstance(animations[animationName]);
-        animationInstances[animationInstanceID]->setID(animationInstanceID);
-        return animationInstances[animationInstanceID];
-    }
-}
-
 ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animationInstanceID){
     if(animationInstances.count(animationInstanceID) == 0){
         ofLogError("ofxAnimatableManager::generateAnimationInstance", "No animation instance of id "+animationInstanceID+" found, returning NULL");
@@ -129,17 +117,24 @@ void ofxAnimatableManager::loadInstances(ofxJSONElement instancesData){
             continue;
         }
         string animationName = animationInstanceData[ANIMATION].asString();
-        ofxAnimationInstance* animationInstance = generateAnimationInstance(animationName, instanceName);
-        if(animationInstanceData[DURATION] != ofxJSONElement::null){
-            animationInstance->setDuration(ofToFloat(animationInstanceData[DURATION].asString()));
+        if(hasAnimation(animationName)){
+            ofxAnimationInstance* animationInstance = getAnimation(animationName)->generateAnimationInstance(instanceName);
+            animationInstances[instanceName] = animationInstance;
+            if(animationInstanceData[DURATION] != ofxJSONElement::null){
+                animationInstance->setDuration(ofToFloat(animationInstanceData[DURATION].asString()));
+            }
+            if(animationInstanceData[DELAY] != ofxJSONElement::null){
+                animationInstance->setDelay(ofToFloat(animationInstanceData[DELAY].asString()));
+            }
+            if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
+                string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
+                animationInstance->setCurve(ofxAnimatable::getCurveFromName(timingFunc));
+            }
         }
-        if(animationInstanceData[DELAY] != ofxJSONElement::null){
-            animationInstance->setDelay(ofToFloat(animationInstanceData[DELAY].asString()));
+        else{
+            ofLogWarning("ofxAnimatableManager::loadInstances","Instance '"+instanceName+"' calls for animation '"+animationName+"', which does not exist");
         }
-        if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
-            string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
-            animationInstance->setCurve(ofxAnimatable::getCurveFromName(timingFunc));
-        }
+        
     }
 }
 

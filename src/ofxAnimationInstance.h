@@ -1,11 +1,12 @@
+#pragma once
 #include "ofMain.h"
 #include "ofxAnimation.h"
 #include "ofxAnimatableFloat.h"
-
+class ofxAnimation;
+class ofxAnimationKeyframe;
 class ofxAnimationInstance : public ofxAnimatableFloat{
 public:
     ofxAnimationInstance();
-    ofxAnimationInstance(ofxAnimation* animation);
     void update(float dt);
     void setID(string ID);
     string getID();

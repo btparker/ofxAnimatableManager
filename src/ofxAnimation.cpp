@@ -53,5 +53,12 @@ vector<ofxAnimationKeyframe*> ofxAnimation::getKeyframeSequence(){
     return this->keyframeSequence;
 }
 
+ofxAnimationInstance* ofxAnimation::generateAnimationInstance(string ID){
+    ofxAnimationInstance* animInst = new ofxAnimationInstance();
+    animInst->setID(ID);
+    animInst->setAnimation(this);
+    return animInst;
+}
+
 ofxAnimation::~ofxAnimation(){
 }
