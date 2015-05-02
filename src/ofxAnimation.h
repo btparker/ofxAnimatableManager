@@ -6,6 +6,7 @@
 #include "ofxAnimatableOfColor.h"
 #include "ofxAnimationInstance.h"
 #include "ofxAnimationKeyframe.h"
+#include "ofxJSONElement.h"
 
 class ofxAnimationInstance;
 class ofxAnimation{
@@ -22,12 +23,18 @@ public:
         return a->getPercentage() <= b->getPercentage();
     }
     
+    void init(ofxJSONElement animationData);
+    
     set<string> getKeys();
     
     ofxAnimationInstance* generateAnimationInstance(string ID);
+    
+    static bool isColor(string colorStr);
+    static ofColor parseColor(string colorValue);
     
 private:
     string name;
     map<string,ofxAnimationKeyframe> keyframes;
     vector<ofxAnimationKeyframe*> keyframeSequence;
+    
 };

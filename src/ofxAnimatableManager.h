@@ -6,9 +6,7 @@
 const string INSTANCES = "instances";
 const string ANIMATIONS = "animations";
 const string ANIMATION = "animation";
-const string DURATION = "duration";
-const string DELAY = "delay";
-const string TIMING_FUNCTION = "timing-function";
+
 
 namespace AnimatableTypes {
     enum ENUM{FLOAT, COLOR, POINT};
@@ -19,8 +17,6 @@ public:
     ofxAnimatableManager();
     ~ofxAnimatableManager();
     void update(float dt);
-    ofxAnimation* addAnimation(string animationName);
-//    ofxAnimationInstance* generateAnimationInstance(string animationName, string animationInstanceID);
     ofxAnimationInstance* cloneAnimationInstance(string animationInstanceID);
     bool hasAnimation(string animationName);
     bool hasAnimationInstance(string animationInstanceID);
@@ -32,8 +28,6 @@ public:
     void loadInstances(ofxJSONElement instancesData);
     
     map<string, string> data;
-    static bool isColor(string colorStr);
-    static ofColor parseColor(string colorValue);
     map<string, ofxAnimation*>* getAnimations();
     map<string, ofxAnimationInstance*>* getAnimationInstances();
 protected:

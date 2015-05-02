@@ -180,3 +180,16 @@ void ofxAnimationInstance::clone(ofxAnimationInstance* c){
     c->setDuration(this->getDuration());
     c->setCurve(this->curveStyle_);
 }
+
+void ofxAnimationInstance::init(ofxJSONElement animationInstanceData){
+    if(animationInstanceData[DURATION] != ofxJSONElement::null){
+        setDuration(ofToFloat(animationInstanceData[DURATION].asString()));
+    }
+    if(animationInstanceData[DELAY] != ofxJSONElement::null){
+        setDelay(ofToFloat(animationInstanceData[DELAY].asString()));
+    }
+    if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
+        string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
+        setCurve(ofxAnimatable::getCurveFromName(timingFunc));
+    }
+}

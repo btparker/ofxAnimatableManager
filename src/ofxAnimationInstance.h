@@ -1,7 +1,13 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxAnimation.h"
+#include "ofxJSONElement.h"
 #include "ofxAnimatableFloat.h"
+
+const string DURATION = "duration";
+const string DELAY = "delay";
+const string TIMING_FUNCTION = "timing-function";
+
 class ofxAnimation;
 class ofxAnimationKeyframe;
 class ofxAnimationInstance : public ofxAnimatableFloat{
@@ -28,7 +34,7 @@ public:
     void animateToNextKeyframe();
     set<string> getKeys();
     bool started;
-    
+    void init(ofxJSONElement animationInstanceData);
     void clone(ofxAnimationInstance* c);
 protected:
     string ID;
