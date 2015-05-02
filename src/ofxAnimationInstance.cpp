@@ -174,11 +174,13 @@ void ofxAnimationInstance::trigger(){
     this->play();
 }
 
-void ofxAnimationInstance::clone(ofxAnimationInstance* c){
+ofxAnimationInstance* ofxAnimationInstance::clone(){
+    ofxAnimationInstance* c = animation->generateAnimationInstance(getID());
     c->setAnimation(this->animation);
     c->setDelay(this->getDelay());
     c->setDuration(this->getDuration());
     c->setCurve(this->curveStyle_);
+    return c;
 }
 
 void ofxAnimationInstance::init(ofxJSONElement animationInstanceData){

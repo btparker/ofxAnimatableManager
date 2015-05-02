@@ -35,7 +35,7 @@ public:
     set<string> getKeys();
     bool started;
     void init(ofxJSONElement animationInstanceData);
-    void clone(ofxAnimationInstance* c);
+    ofxAnimationInstance* clone();
     
     ofxAnimation* getAnimation();
 protected:

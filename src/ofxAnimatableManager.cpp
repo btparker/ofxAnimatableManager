@@ -47,7 +47,7 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
     else{
         ofxAnimationInstance* original = animationInstances[animationInstanceID];
         ofxAnimation* anim = original->getAnimation();
-        ofxAnimationInstance* c = anim->generateAnimationInstance(original->getID());
+        ofxAnimationInstance* c = original->clone();
         string ID = animationInstanceID+":"+ofToString(c);
         clonedAnimationInstances[ID] = c;
         return clonedAnimationInstances[ID];
