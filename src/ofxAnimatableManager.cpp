@@ -6,9 +6,9 @@ ofxAnimatableManager::ofxAnimatableManager(){
 }
 
 void ofxAnimatableManager::update(float dt){
-    for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
-        animationInstance->second->update(dt);
-    }
+//    for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
+//        animationInstance->second->update(dt);
+//    }
     for(auto animationInstance = clonedAnimationInstances.begin(); animationInstance != clonedAnimationInstances.end(); ++animationInstance){
         animationInstance->second->update(dt);
     }
@@ -90,32 +90,25 @@ ofxAnimatableManager::~ofxAnimatableManager(){
     }
 }
 
-void ofxAnimatableManager::load(string filename){
-    ofxJSONElement animationData;
-    if(animationData.open(filename)){
-        if(animationData[ANIMATIONS] != ofxJSONElement::null){
-            loadAnimations(animationData[ANIMATIONS]);
-        }
-        if(animationData[INSTANCES] != ofxJSONElement::null){
-            loadInstances(animationData[INSTANCES]);
-        }
+void ofxAnimatableManager::load(ofxJSONElement animationData){
+    if(animationData[ANIMATIONS] != ofxJSONElement::null){
+        loadAnimations(animationData[ANIMATIONS]);
+    }
+    if(animationData[INSTANCES] != ofxJSONElement::null){
+        loadInstances(animationData[INSTANCES]);
     }
 }
 
 void ofxAnimatableManager::loadAnimations(ofxJSONElement animationsData){
     vector<string> animationNames = animationsData.getMemberNames();
     for(string animationName : animationNames){
-        animationName = populateExpressions(animationName);
         ofxAnimation* animation = addAnimation(animationName);
         vector<string> keyframeIndices = animationsData[animationName].getMemberNames();
         for(string keyframeIndex : keyframeIndices){
-            keyframeIndex = populateExpressions(keyframeIndex);
             ofxAnimationKeyframe* keyframe = animation->addKeyframe(keyframeIndex);
             vector<string> animatableKeys = animationsData[animationName][keyframeIndex].getMemberNames();
             for(string animatableKey : animatableKeys){
-                animatableKey = populateExpressions(animatableKey);
                 string value = animationsData[animationName][keyframeIndex][animatableKey].asString();
-                value = populateExpressions(value);
                 if(isColor(value)){
                     keyframe->setValue(animatableKey, parseColor(value));
                 }
@@ -145,7 +138,6 @@ void ofxAnimatableManager::loadInstances(ofxJSONElement instancesData){
         }
         if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
             string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
-            timingFunc = populateExpressions(timingFunc);
             animationInstance->setCurve(ofxAnimatable::getCurveFromName(timingFunc));
         }
     }
@@ -194,35 +186,6 @@ ofColor ofxAnimatableManager::parseColor(string colorValue){
         color = ofColor::black;
     }
     return color;
-}
-
-string ofxAnimatableManager::populateExpressions(string input){
-    string value = input;
-    while(ofStringTimesInString(value, "{{") > 0){
-        string leftDeliminator = "{{";
-        string rightDeliminator = "}}";
-        
-        int leftDeliminatorPos = input.find(leftDeliminator);
-        int rightDeliminatorPos = input.find(rightDeliminator);
-        
-        int dataKeyPos = leftDeliminatorPos+leftDeliminator.length();
-        int dataKeyLength = rightDeliminatorPos-dataKeyPos;
-        
-        string dataKey = input.substr(dataKeyPos, dataKeyLength);
-        
-        if(data.count(dataKey) > 0){
-            ofStringReplace(value, leftDeliminator+dataKey+rightDeliminator, data[dataKey]);
-        }
-        else{
-            ofLogWarning("ofxLayout::populateExpressions","Could not find data value for key '{{"+dataKey+"}}', replaced with ''.");
-            ofStringReplace(value, leftDeliminator+dataKey+rightDeliminator, "");
-        }
-    }
-    return value;
-}
-
-void ofxAnimatableManager::setData(map<string, string> data){
-    this->data = data;
 }
 
 map<string, ofxAnimation*>* ofxAnimatableManager::getAnimations(){
