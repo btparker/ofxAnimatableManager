@@ -193,3 +193,7 @@ void ofxAnimationInstance::init(ofxJSONElement animationInstanceData){
         setCurve(ofxAnimatable::getCurveFromName(timingFunc));
     }
 }
+
+ofxAnimation* ofxAnimationInstance::getAnimation(){
+    return animation;
+}

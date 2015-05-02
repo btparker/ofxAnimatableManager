@@ -36,6 +36,8 @@ public:
     bool started;
     void init(ofxJSONElement animationInstanceData);
     void clone(ofxAnimationInstance* c);
+    
+    ofxAnimation* getAnimation();
 protected:
     string ID;
     string stateID;

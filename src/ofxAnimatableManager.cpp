@@ -45,11 +45,11 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
         return NULL;
     }
     else{
-        ofxAnimationInstance* c = new ofxAnimationInstance();
-        animationInstances[animationInstanceID]->clone(c);
+        ofxAnimationInstance* original = animationInstances[animationInstanceID];
+        ofxAnimation* anim = original->getAnimation();
+        ofxAnimationInstance* c = anim->generateAnimationInstance(original->getID());
         string ID = animationInstanceID+":"+ofToString(c);
         clonedAnimationInstances[ID] = c;
-        clonedAnimationInstances[ID]->setID(ID);
         return clonedAnimationInstances[ID];
     }
 }
