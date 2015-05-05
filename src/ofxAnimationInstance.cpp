@@ -6,6 +6,7 @@ ofxAnimationInstance::ofxAnimationInstance(){
     this->duration = 1.0f;
     this->setCurve(EASE_IN_EASE_OUT);
     this->setRepeatTimes(1);
+    this->animation = NULL;
     ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
 }
 
