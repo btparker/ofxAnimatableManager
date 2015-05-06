@@ -6,6 +6,9 @@ ofxAnimatableManager::ofxAnimatableManager(){
 }
 
 void ofxAnimatableManager::update(float dt){
+    for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
+        animationInstance->second->update(dt);
+    }
     for(auto animationInstance = clonedAnimationInstances.begin(); animationInstance != clonedAnimationInstances.end(); ++animationInstance){
         animationInstance->second->update(dt);
     }
