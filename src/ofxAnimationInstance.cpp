@@ -1,12 +1,13 @@
 #include "ofxAnimationInstance.h"
 
 ofxAnimationInstance::ofxAnimationInstance(){
-    keyframeIndex = 0;
+    this->keyframeIndex = 0;
     this->delay = 0.0f;
     this->duration = 1.0f;
     this->setCurve(EASE_IN_EASE_OUT);
     this->setRepeatTimes(1);
     this->animation = NULL;
+    this->started = false;
     ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
 }
 
@@ -26,8 +27,11 @@ void ofxAnimationInstance::setAnimation(ofxAnimation* animation){
 }
 
 void ofxAnimationInstance::finished(AnimationEvent & args){
-    args.who->setPercentDone(0.0);
-    ((ofxAnimationInstance*)args.who)->keyframeIndex = 0;
+    pause();
+    setPercentDone(0.0);
+    started = false;
+    keyframeIndex = 0;
+    ofRemoveListener(this->animFinished, this, &ofxAnimationInstance::finished);
 }
 
 void ofxAnimationInstance::update(float dt){
@@ -171,7 +175,7 @@ set<string> ofxAnimationInstance::getKeys(){
 }
 
 void ofxAnimationInstance::trigger(){
-    this->reset();
+    this->reset(0.0);
     this->play();
 }
 
