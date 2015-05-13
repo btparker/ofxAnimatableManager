@@ -5,10 +5,22 @@ ofxAnimationInstance::ofxAnimationInstance(){
     this->delay = 0.0f;
     this->duration = 1.0f;
     this->setCurve(EASE_IN_EASE_OUT);
-    this->setRepeatTimes(1);
+    this->setRepeatTimes(0);
     this->animation = NULL;
     this->started = false;
     ofAddListener(this->animFinished, this,  &ofxAnimationInstance::finished);
+    ofAddListener(this->animLooped, this,  &ofxAnimationInstance::looped);
+}
+ofxAnimationInstance::~ofxAnimationInstance(){
+    for(auto colorIt = colorAnimatables.begin(); colorIt != colorAnimatables.end(); ++colorIt){
+        colorIt->second->pause();
+    }
+    for(auto floatIt = floatAnimatables.begin(); floatIt != floatAnimatables.end(); ++floatIt){
+        floatIt->second->pause();
+    }
+    reset();
+    ofRemoveListener(this->animFinished, this, &ofxAnimationInstance::finished);
+    ofRemoveListener(this->animLooped, this, &ofxAnimationInstance::looped);
 }
 
 //
@@ -27,11 +39,14 @@ void ofxAnimationInstance::setAnimation(ofxAnimation* animation){
 }
 
 void ofxAnimationInstance::finished(AnimationEvent & args){
-    pause();
-    setPercentDone(0.0);
     started = false;
     keyframeIndex = 0;
-    ofRemoveListener(this->animFinished, this, &ofxAnimationInstance::finished);
+}
+
+
+void ofxAnimationInstance::looped(AnimationEvent & args){
+    started = false;
+    keyframeIndex = 0;
 }
 
 void ofxAnimationInstance::update(float dt){
@@ -198,6 +213,15 @@ void ofxAnimationInstance::init(ofxJSONElement animationInstanceData){
     if(animationInstanceData[TIMING_FUNCTION] != ofxJSONElement::null){
         string timingFunc = animationInstanceData[TIMING_FUNCTION].asString();
         setCurve(ofxAnimatable::getCurveFromName(timingFunc));
+    }
+    if(animationInstanceData[ITERATION_COUNT] != ofxJSONElement::null){
+        string iterationCount = animationInstanceData[ITERATION_COUNT].asString();
+        if(iterationCount == "infinite"){
+            this->setRepeatType(LOOP);
+        }
+        else{
+            setRepeatTimes(ofToInt(iterationCount));
+        }
     }
 }
 

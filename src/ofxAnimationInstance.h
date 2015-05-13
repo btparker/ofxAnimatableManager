@@ -7,12 +7,14 @@
 const string DURATION = "duration";
 const string DELAY = "delay";
 const string TIMING_FUNCTION = "timing-function";
+const string ITERATION_COUNT = "iteration-count";
 
 class ofxAnimation;
 class ofxAnimationKeyframe;
 class ofxAnimationInstance : public ofxAnimatableFloat{
 public:
     ofxAnimationInstance();
+    ~ofxAnimationInstance();
     void update(float dt);
     void setID(string ID);
     string getID();
@@ -28,6 +30,7 @@ public:
     void setAnimatable(string key, ofxAnimatableFloat* floatAnimatable);
     void setAnimatable(string key, ofxAnimatableOfColor* colorAnimatable);
     void finished(AnimationEvent& args);
+    void looped(AnimationEvent& args);
     void applyKeyframe(ofxAnimationKeyframe* keyframe);
     void animateToKeyframe(ofxAnimationKeyframe* keyframe, float duration);
     void trigger();
@@ -36,7 +39,6 @@ public:
     bool started;
     void init(ofxJSONElement animationInstanceData);
     ofxAnimationInstance* clone();
-    
     ofxAnimation* getAnimation();
 protected:
     string ID;
