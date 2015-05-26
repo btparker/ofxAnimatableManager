@@ -52,20 +52,40 @@ ofxAnimationInstance* ofxAnimatableManager::cloneAnimationInstance(string animat
         ofxAnimation* anim = original->getAnimation();
         ofxAnimationInstance* c = original->clone();
         string ID = animationInstanceID+":"+ofToString(c);
+        c->setID(ID);
         clonedAnimationInstances[ID] = c;
         return clonedAnimationInstances[ID];
     }
 }
 
-ofxAnimatableManager::~ofxAnimatableManager(){
-    for(auto animation = animations.begin(); animation != animations.end(); ++animation){
-        delete animation->second;
+void ofxAnimatableManager::removeAnimationInstance(string animationInstanceID){
+    if(animationInstances.count(animationInstanceID) > 0){
+        delete animationInstances[animationInstanceID];
+        animationInstances[animationInstanceID] = NULL;
+        animationInstances.erase(animationInstanceID);
     }
+    
+    if(clonedAnimationInstances.count(animationInstanceID) > 0){
+        delete clonedAnimationInstances[animationInstanceID];
+        clonedAnimationInstances[animationInstanceID] = NULL;
+        clonedAnimationInstances.erase(animationInstanceID);
+    }
+}
+
+ofxAnimatableManager::~ofxAnimatableManager(){
     for(auto animationInstance = animationInstances.begin(); animationInstance != animationInstances.end(); ++animationInstance){
-        delete animationInstance->second;
+        if(animationInstances[animationInstance->first]){
+            delete animationInstance->second;
+        }
     }
     for(auto animationInstance = clonedAnimationInstances.begin(); animationInstance != clonedAnimationInstances.end(); ++animationInstance){
-        delete animationInstance->second;
+        if(animationInstances[animationInstance->first]){
+            delete animationInstance->second;
+        }
+    }
+    
+    for(auto animation = animations.begin(); animation != animations.end(); ++animation){
+        delete animation->second;
     }
 }
 
@@ -100,6 +120,7 @@ void ofxAnimatableManager::loadInstances(ofxJSONElement instancesData){
         if(hasAnimation(animationName)){
             ofxAnimationInstance* animationInstance = getAnimation(animationName)->generateAnimationInstance(instanceName);
             animationInstance->init(animationInstanceData);
+            animationInstance->setID(instanceName);
             animationInstances[instanceName] = animationInstance;
             
         }

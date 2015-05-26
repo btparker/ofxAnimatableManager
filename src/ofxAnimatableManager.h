@@ -26,7 +26,7 @@ public:
     void load(ofxJSONElement animationData);
     void loadAnimations(ofxJSONElement animationsData);
     void loadInstances(ofxJSONElement instancesData);
-    
+    void removeAnimationInstance(string animationInstanceID);
     map<string, string> data;
     map<string, ofxAnimation*>* getAnimations();
     map<string, ofxAnimationInstance*>* getAnimationInstances();
